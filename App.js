@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { Button, Icon } from 'react-native-elements';
 import { Provider } from 'react-redux';
 
 import store from './store';
@@ -12,26 +13,41 @@ import SettingScreen from './screens/SettingScreen';
 import ReviewScreen from './screens/ReviewScreen';
 
 const MainNavigator = createBottomTabNavigator({
-  welcome: WelcomeScreen,
-  auth: AuthScreen,
-  main: createBottomTabNavigator({
-    map: MapScreen,
-    deck: DeckScreen,
-    main: createStackNavigator({
-      review: ReviewScreen,
-      settings: SettingScreen
-    })
-  })
-}, {
-  navigationOptions: {
-    tabBarVisible: false 
-  },
-  lazy: true
-});
+      welcome: { screen: WelcomeScreen },
+      auth: { screen: AuthScreen },
+      main: {
+        screen: createBottomTabNavigator({
+          map: { screen: MapScreen },
+          deck: { screen: DeckScreen },
+          review: {
+            screen: createStackNavigator({
+              review: { screen: ReviewScreen },
+              settings: { screen: SettingScreen },
+            }),
+            navigationOptions: {
+              title: 'Review',
+              tabBarLabel: 'Review',
+              tabBarIcon: ({ tintColor }) => (
+                <Icon name="favorite" size={25} color={tintColor} />
+              )
+            }
+          }
+        }, {
+          tabBarOptions: {
+            labelStyle: { fontSize: 12 },
+          },
+        }),
+      }
+    }, {
+      navigationOptions: {
+        tabBarVisible: false,
+      },
+      lazy: true,
+    });
 
 export default class App extends React.Component {
-  render() {
 
+  render() {
     return (
       <Provider store={store}>
         <View style={styles.container}>
